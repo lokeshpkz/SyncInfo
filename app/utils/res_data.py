@@ -7,17 +7,20 @@ from Crypto.Cipher import AES
 import base64
 from pymongo import MongoClient
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Constants
 MAIN_KEY = base64.b64decode('WWcmdGMlREV1aDYlWmNeOA==')
 MAIN_IV = base64.b64decode('Nm95WkRyMjJFM3ljaGpNJQ==')
-RELEASE_VERSION = "OB50"
+RELEASE_VERSION = "OB55"
 
 # MongoDB connection
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
-db = client.info
-tokens_collection = db.tokens
+db = client.bot_xpert
+tokens_collection = db.info_tokens
 
 async def json_to_proto(json_data: str, proto_message: message.Message) -> bytes:
     """Convert JSON data to protobuf bytes"""
@@ -44,7 +47,7 @@ def decode_protobuf(encoded_data: bytes, message_type: message.Message) -> messa
 
 def get_jwt_tokens():
     """Get JWT tokens from database for allowed regions"""
-    allowed_regions = {"bd", "pk", "ind", "na"}
+    allowed_regions = {"bd", "pk", "ind", "us"}
     tokens_cursor = tokens_collection.find({"region": {"$in": list(allowed_regions)}})
     
     tokens = {}
@@ -56,13 +59,12 @@ def get_jwt_tokens():
     return tokens
 
 def get_url(region):
-    """Get server URL based on region"""
     if region == "ind":
         return "https://client.ind.freefiremobile.com"
     elif region in {"br", "us", "sac", "na"}:
         return "https://client.us.freefiremobile.com"
     else:
-        return "https://clientbp.ggblueshark.com"
+        return "https://clientbp.ppmainecoonghj.com"
 
 def build_headers(token):
     return {
@@ -120,10 +122,10 @@ async def GetAccountInformation(ID, UNKNOWN_ID, endpoint):
                     if hasattr(message, 'developer_info'):
                         # Create developer info object
                         dev_info = personalInfo_pb2.DeveloperInfo()
-                        dev_info.developer_name = "Lokesh"  
-                        dev_info.portfolio = "https://nexxlokesh.pro"
-                        dev_info.github = "@nexxlokesh"
-                        dev_info.youtube = "@akchualdev"
+                        dev_info.developer_name = "@lokeshpkz"  
+                        dev_info.portfolio = "https://nexxlokesh.in"
+                        dev_info.github = "https://github.com/lokeshpkz"
+                        dev_info.youtube = "@aimguardexe"
                         dev_info.signature = "Aimguard — I don't write code. I write legacy."
                         dev_info.do_not_remove_credits = True
                         
